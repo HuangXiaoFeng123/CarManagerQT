@@ -8,6 +8,7 @@
 #include <QSqlQueryModel>
 #include <QSqlQuery>
 #include <QDebug>
+#include "donxml.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui

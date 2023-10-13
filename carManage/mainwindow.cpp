@@ -7,6 +7,7 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
     on_actionCar_triggered();
     connectDB();
     initData();
+    DonXML::createXML("../demo.xml");
 }
 
 MainWindow::~MainWindow(void)
@@ -148,6 +149,30 @@ void MainWindow::on_ButtonSure_clicked(void)
                 .arg(ui->comboBoxFactory->currentText())
                 .arg(ui->comboBoxBrand->currentText());
     query.exec(sql);
+    QStringList list;               //把确认后的数据更新到xml中
+    list <<ui->comboBoxFactory->currentText()
+         <<ui->comboBoxBrand->currentText()
+         <<ui->lineEditPriece->text()
+         <<QString::number(num)
+         <<ui->lineEditTotal->text();
+    DonXML::appendXML("../demo.xml",list);
+    QStringList fList;
+    QStringList bList;
+    QStringList pList;
+    QStringList nList;
+    QStringList tList;
+    DonXML::readXML("../demo.xml",fList,bList,pList,nList,tList);
+    for(int i=0;i<fList.size();i++)
+    {
+      QString str=QString("%1:%2:卖出了%3,单价:%4，总价:%5")
+              .arg(fList.at(i))
+              .arg(bList.at(i))
+              .arg(nList.at(i))
+              .arg(pList.at(i))
+              .arg(tList.at(i));
+      ui->textEdit->append(str);
+      //qDebug()<<str.toUtf8().data();
+    }
     ui->ButtonSure->setEnabled(false);
     on_ButtonCancel_clicked();
 }
